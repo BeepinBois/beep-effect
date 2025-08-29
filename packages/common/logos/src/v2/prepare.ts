@@ -3,6 +3,7 @@ import type { UnsafeTypes } from "@beep/types";
 import { getAt } from "@beep/utils";
 import * as A from "effect/Array";
 import * as Bool from "effect/Boolean";
+import * as Effect from "effect/Effect";
 import * as F from "effect/Function";
 import * as Match from "effect/Match";
 import * as Num from "effect/Number";
@@ -27,6 +28,7 @@ import {
 } from "./rules";
 import type { RootOrGroup } from "./types";
 import { validate } from "./validate";
+
 export type Runner = (value: unknown) => boolean;
 
 type CacheEntry = { runner: Runner; fp: string };
@@ -119,15 +121,14 @@ function compileGroup(u: RootOrGroup): Runner {
     return false;
   };
 }
-
-export function prepare(root: RootGroup.Type): Runner {
+export const prepare = Effect.fn("prepare")(function* (root: RootGroup.Type) {
   const cached = cache.get(root);
   const currentFp = FingerPrint.make(root);
   if (cached && cached.fp === currentFp) return cached.runner;
 
-  const v = validate(root);
+  const v = yield* validate(root);
   if (!v.isValid) {
-    throw new Error(v.reason);
+    return yield* Effect.fail(new Error(v.reason));
   }
 
   // Normalize once for predictable structure; mutates in place.
@@ -137,11 +138,16 @@ export function prepare(root: RootGroup.Type): Runner {
   const entry: CacheEntry = { runner, fp: FingerPrint.make(root) };
   cache.set(root, entry);
   return entry.runner;
-}
+});
 
-export function runPrepared(root: RootGroup.Type, value: unknown): boolean {
-  return prepare(root)(value);
-}
+export const runPrepared = Effect.fn("runPrepared")(
+  function* (root: RootGroup.Type, value: unknown) {
+    const prepared = yield* prepare(root);
+    return prepared(value);
+  },
+  (effect, root, value) =>
+    effect.pipe(Effect.withSpan("runPrepared", { attributes: { root, value } }), Effect.annotateLogs({ root, value }))
+);
 
 // Internal export for in-package use (e.g., run.ts) to compile groups without
 // validation or caching. Not re-exported from index.ts to keep public API clean.

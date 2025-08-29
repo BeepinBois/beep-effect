@@ -10,5 +10,9 @@
     "declaration": true,
     "sourceMap": true
   },
-  "references": []
+  "references": [
+    {
+      "path": "../../common/invariant/tsconfig.build.json"
+    }
+  ]
 }

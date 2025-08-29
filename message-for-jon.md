@@ -36,3 +36,4 @@ How I’d help you land production-grade, real-time, policy-as-data
 If this aligns with what you’re building, I’d love to help finish the implementation and shape the final form. I’m happy to start with a short, scoped engagement (review → plan → delivery) and move quickly.
 
 Thanks for reading — looking forward to chatting!
+https://assets.cdn.filesafe.space/RK9eXke0bpwML1gstXvX/media/682b7062f08c46202c5bf8da.gif

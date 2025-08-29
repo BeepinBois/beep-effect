@@ -3,7 +3,9 @@
   "include": [],
   "compilerOptions": {
     "paths": {
-      "@beep/db-scope/*": ["./src/*"]
+      "@beep/db-scope/*": ["./src/*"],
+      "@beep/invariant": ["../../common/invariant/src/index"],
+      "@beep/invariant/*": ["../../common/invariant/src/*"]
     }
   },
   "references": [

@@ -5,6 +5,5 @@ export type * as RecordTypes from "./record.types";
 export type * as StringTypes from "./string.types";
 export type * as StructTypes from "./struct.types";
 export type * as TagTypes from "./tag.types";
-export type * as TF from "./type-fest";
 export type * as UnsafeTypes from "./unsafe.types";
 export type * as UtilTypes from "./util.types";

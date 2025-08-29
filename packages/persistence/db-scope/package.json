@@ -33,12 +33,15 @@
     "lint:circular": "pnpm madge -c ."
   },
   "peerDependencies": {
+    "@beep/invariant": "workspace:^",
     "drizzle-orm": "*",
     "effect": "*",
-    "pg": "*"
+    "pg": "*",
+    "chalk": "*"
   },
   "devDependencies": {
-    "@types/pg": "*"
+    "@types/pg": "*",
+    "sql-formatter": "*"
   },
   "effect": {
     "generateExports": {
