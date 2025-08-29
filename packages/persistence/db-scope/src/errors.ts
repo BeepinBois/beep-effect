@@ -89,40 +89,6 @@ const formatSql = (v: O.Option<string>) =>
     })
   );
 
-class MessageName extends S.Option(
-  S.Literal(
-    "parseComplete",
-    "bindComplete",
-    "closeComplete",
-    "noData",
-    "portalSuspended",
-    "replicationStart",
-    "emptyQuery",
-    "copyDone",
-    "copyData",
-    "rowDescription",
-    "parameterDescription",
-    "parameterStatus",
-    "backendKeyData",
-    "notification",
-    "readyForQuery",
-    "commandComplete",
-    "dataRow",
-    "copyInResponse",
-    "copyOutResponse",
-    "authenticationOk",
-    "authenticationMD5Password",
-    "authenticationCleartextPassword",
-    "authenticationSASL",
-    "authenticationSASLContinue",
-    "authenticationSASLFinal",
-    "error",
-    "notice"
-  )
-) {
-  static readonly is = (value: unknown): value is typeof MessageName.Type => S.is(MessageName)(value);
-}
-
 export class OptionNumber extends S.Option(S.Number) {
   static readonly is = (value: unknown): value is typeof OptionNumber.Type => S.is(OptionNumber)(value);
 }
@@ -135,12 +101,6 @@ export const formatErr = (errValue: pg.DatabaseError) =>
     A.map(([key, value]) =>
       Match.value([key, filterNullable(value)]).pipe(
         Match.when(["code", isOptionStr], ([k, v]) => fmtLine(k, formatSql(v))),
-        Match.when(["name", MessageName.is], ([k, v]) =>
-          fmtLine(
-            k,
-            O.getOrElse(v, () => "")
-          )
-        ),
         Match.when(["length", OptionNumber.is], ([k, v]) =>
           fmtLine(
             k,
